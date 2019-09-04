@@ -1,26 +1,65 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import EditorJs from '@editorjs/editorjs';
+import Header from '@editorjs/header'
+import List from '@editorjs/list'
+import Embed from '@editorjs/embed'
+import ImageTool from '@editorjs/image'
+
+const editor = new EditorJs({
+  holderId: 'editorjs',
+  tools: {
+    header: {
+      class: Header,
+      inlineToolbar: ['link']
+    },
+    list: {
+      class: List,
+      inlineToolbar: [
+        'link',
+        'bold',
+      ]
+    },
+    embed: {
+      class: Embed,
+      inlineToolbar: false,
+      config: {
+        services: {
+          youtube: true
+        }
+      }
+    },
+    image: {
+      class: ImageTool,
+      config: {
+        uploader: {
+          uploadByFile(file) {
+            console.log(file)
+          },
+          uploadByUrl(url) {
+            console.log(url)
+          }
+        }
+      }
+    }
+  }
+})
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Your content</h1>
+      <div id="editorjs" />
+      <button onClick={() => {
+        editor.save().then(outputData => console.log(outputData))
+      }}>save</button>
     </div>
   );
+
+
+
 }
+
+
 
 export default App;
